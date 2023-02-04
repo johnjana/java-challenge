@@ -35,4 +35,16 @@ public class Employee {
     @Column(name="DEPARTMENT")
     private String department;
 
+	public Employee() {
+		super();
+	}
+
+	public Employee(Long id, String name, Integer salary, String department) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+		this.department = department;
+	}
+
 }
