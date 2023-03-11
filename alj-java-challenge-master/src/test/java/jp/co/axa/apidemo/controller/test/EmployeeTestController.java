@@ -22,12 +22,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.co.axa.apidemo.controllers.EmployeeController;
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.services.EmployeeService;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(EmployeeController.class)
+@WebMvcTest
 public class EmployeeTestController {
 	
 	@Autowired
@@ -35,6 +38,8 @@ public class EmployeeTestController {
 	
 	@MockBean
 	private EmployeeService employeeServiceImpl;
+	
+	ObjectMapper om = new ObjectMapper();
 
 	
 	/** method to test the get all employees**/
@@ -42,8 +47,7 @@ public class EmployeeTestController {
 	public void testgetEmployees() throws Exception {
 		List<Employee> employeeList = new ArrayList<Employee>();
 		
-		Employee e = new Employee(1L,"sai",10000,"IT");
-		employeeList.add(e);
+		Employee e = new Employee(1L,"sai",2000,"IT");
 		when(employeeServiceImpl.retrieveEmployees()).thenReturn(employeeList);
 		this.mockMvc.perform(get("/api/v1/employees")).andExpect(status().isOk()).
 		andReturn();
@@ -53,7 +57,7 @@ public class EmployeeTestController {
 	@Test
 	public void testGetEmployee() throws Exception {
 		List<Employee> employeeList = new ArrayList<Employee>();
-		Employee e = new Employee(1L,"sai",10000,"IT");
+		Employee e = new Employee(1L,"sai",10000,"IT"); 
 		employeeList.add(e);
 		when(employeeServiceImpl.getEmployee(1L)).thenReturn(e);
 		this.mockMvc.perform(get("/api/v1/employees/1")).andExpect(status().isOk()).andReturn();
@@ -84,13 +88,10 @@ public class EmployeeTestController {
 	
 	/** method to test the get all employees**/
 	@Test
-	public void testUpdateEmployees() throws Exception {
-		List<Employee> employeeList = new ArrayList<Employee>();
-		String employee =
-				"{id:1L,name:sai,salary:2000,department:IT}";
+	public void testUpdateEmployees() throws Exception {		
 		Employee e = new Employee(1L,"sai",10000,"IT");
-		employeeList.add(e);
-		when(employeeServiceImpl.retrieveEmployees()).thenReturn(employeeList);
+		when(employeeServiceImpl.getEmployee(1L)).thenReturn(e);
+		String employee = om.writeValueAsString(e);
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.put
 				("/api/v1/employees/1")
 		.content(employee)

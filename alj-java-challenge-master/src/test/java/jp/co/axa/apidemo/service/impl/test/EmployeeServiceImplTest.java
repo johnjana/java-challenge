@@ -39,6 +39,7 @@ public class EmployeeServiceImplTest {
 		
 		 List<Employee> employees = new ArrayList<Employee>();
 		 Employee e = new Employee(1L,"sai",20000,"IT");
+		 
 		 employees.add(e);
 		 when(employeeRepository.findAll()).thenReturn(employees);	
 		 assertTrue(employeeServcie.retrieveEmployees().size()>0);
@@ -58,7 +59,8 @@ public class EmployeeServiceImplTest {
 	public void testSaveEmployee() {
 		
 		 Employee e = new Employee(2L,"sai",20000,"IT");
-		doNothing().when(employeeRepository.save(e));
+		 
+		when(employeeRepository.save(e)).thenReturn(e);
 		 employeeServcie.saveEmployee(e);	
 		verify(employeeRepository, times(1)).save(e);
 	}
@@ -86,10 +88,9 @@ public class EmployeeServiceImplTest {
 		 List<Employee> employees = new ArrayList<Employee>();
 		 Employee e = new Employee(1L,"sai",20000,"IT");
 		 employees.add(e);
-		 doNothing().when(employeeRepository.save(e));
-		 //verify(employeeRepository, times(1)).save(e);
+		 when(employeeRepository.save(e)).thenReturn(e);
 		 employeeServcie.updateEmployee(e);	
-		
+		 verify(employeeRepository, times(1)).save(e);
 		 	 		
 	}
 	
